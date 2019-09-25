@@ -48,16 +48,6 @@ function findFirstImpact(items) {
 }
 
 function calcImpact(b1, b2) {
-    if (b1.type === types.WALL) {
-        return {
-            v2: -b2.v
-        }
-    }
-    if (b2.type === types.WALL) {
-        return {
-            v1: -b1.v
-        }
-    }
     const {m: m1, v: v1} = b1;
     const {m: m2, v: v2} = b2;
 
@@ -98,6 +88,11 @@ function sqrtCollideCalc(items, t, tdelta) {
     return items;
 }
 
-export {
-    sqrtCollideCalc
-};
+const items = [
+    {type: types.WALL, x: 0, id: 'w1'},
+    {type: types.BLOCK, x: 100, v: -1, size: 100, id:'b1', m: 100},
+    {type: types.BLOCK, x: 10, v: 1, size: 10,id:'b2', m: 1},
+];
+const curt = 100;
+const calculated = sqrtCollideCalc(items, 0, curt);
+console.log(calculated);

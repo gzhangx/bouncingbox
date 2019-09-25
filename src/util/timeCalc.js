@@ -71,7 +71,7 @@ function calcImpact(b1, b2) {
     }
 }
 
-function updateItems(items, t, imp) {
+function updateItems(items, imp) {
     return items.map(itm=> {
         if (itm.type === types.WALL) return itm;
         if (itm === imp.b1 || itm === imp.b2) {
@@ -87,17 +87,18 @@ function updateItems(items, t, imp) {
     });
 }
 
-function sqrtCollideCalc(items, t, tdelta) {
+function sqrtCollideCalc(items, tdelta) {
     if (tdelta <= 0)  return items;
     const imp = findFirstImpact(items);
     if (!imp) return items;
     if (imp.tm < tdelta) {
-        const next = updateItems(items, t, imp);
-        return sqrtCollideCalc(next, t, tdelta - imp.tm);
+        const next = updateItems(items, imp);
+        return sqrtCollideCalc(next, tdelta - imp.tm);
     }
     return items;
 }
 
 export {
-    sqrtCollideCalc
+    sqrtCollideCalc,
+    types,
 };

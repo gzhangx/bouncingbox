@@ -52,7 +52,7 @@ class RunWorker extends React.Component {
     }
 
     render() {
-        return <Graphic t={this.state.t} width={this.props.width} height={this.props.height} processor={this.proprs.processor} />;
+        return <Graphic t={this.state.t} width={this.props.width} height={this.props.height} processor={this.props.processor} />;
     }
 }
 

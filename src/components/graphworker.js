@@ -11,14 +11,15 @@ class Graphic extends React.Component {
     }
 
     paint() {
-        const { width, height, rotation } = this.props;
+        const { width, height, processor } = this.props;
         const context = this.refs.canvas.getContext("2d");
         context.clearRect(0, 0, width, height);
         context.save();
-        context.translate(100, 100);
-        context.rotate(rotation, 100, 100);
-        context.fillStyle = "#F00";
-        context.fillRect(-50, -50, 100, 100);
+        //context.translate(100, 100);
+        //context.rotate(rotation, 100, 100);
+        //context.fillStyle = "#F00";
+        //context.fillRect(-50, -50, 100, 100);
+        processor(context, this.props);
         context.restore();
     }
 

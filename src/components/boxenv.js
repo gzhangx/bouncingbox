@@ -30,13 +30,14 @@ function Coords() {
 
         const items = [
             {type: types.WALL, x: 0, id: 'w1'},
-            {type: types.BLOCK, x: 60, v: -1, size: 100, id:'b1', m: 100},
+            {type: types.BLOCK, x: 90, v: -1, size: 100, id:'b1', m: 10000},
             {type: types.BLOCK, x: 10, v: 1, size: 10,id:'b2', m: 1},
         ];
-        const curt = t/50;
-        ctx.fillText((curt).toFixed(1), 100, 10);
-        const calculated = sqrtCollideCalc(items, curt);
-        calculated.map(itm=>{
+        const curt = t;
+        const opt = {tdelta: curt, count: 0};
+        const calculated = sqrtCollideCalc(items, opt);
+        ctx.fillText((curt).toFixed(1)+ " " + calculated.count, 100, 10);
+        calculated.items.map(itm=>{
             if (itm.type === types.BLOCK) {
                 drawGroundSqure(itm.x + itm.v*(curt - (itm.baseTime || 0)), itm.size);
             }

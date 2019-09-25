@@ -90,16 +90,26 @@ function updateItems(items, imp) {
     });
 }
 
-function sqrtCollideCalc(items, tdelta, spent = 0) {
+function sqrtCollideCalc(items, opts) {
+    const {tdelta, spent = 0, count = 0} = opts;
     const timeLeft = tdelta - spent;
-    if (timeLeft <= 0)  return items;
+    if (timeLeft <= 0)  return {
+        items,
+        count,
+    };
     const imp = findFirstImpact(items, spent);
-    if (!imp) return items;
+    if (!imp) return {
+        items,
+        count,
+    };
     if (imp.tm < timeLeft) {
         const next = updateItems(items, imp);
-        return sqrtCollideCalc(next, tdelta, spent+imp.tm);
+        return sqrtCollideCalc(next, {tdelta, spent: spent+imp.tm, count: count+1});
     }
-    return items;
+    return {
+        items,
+        count,
+    };
 }
 
 export {

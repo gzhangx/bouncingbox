@@ -47,13 +47,28 @@ function findFirstImpact(items) {
     return minTime;
 }
 
+function calcImpact(b1, b2) {
+    const {m: m1, v: v1} = b1;
+    const {m: m2, v: v2} = b2;
+
+    const m1_2 = m1 - m2;
+    const m12 = m1 + m2;
+    const v1f = (m1_2 * v1 + 2 * m2 * v2) / m12;
+    const v2f = ((-m1_2 * v2) + 2 * m1 * v1) / m12;
+    return {
+        v1: v1f,
+        v2: v2f,
+    }
+}
+
 function updateItems(items, t, imp) {
     return items.map(itm=> {
         if (itm.type === types.WALL) return itm;
         if (itm === imp.b1 || itm === imp.b2) {
+            const res = calcImpact(imp.b1, imp.b2);
             return {
                 ...itm,
-                v: -itm.v,
+                v: itm === imp.v1? res.v1:res.v2,//-itm.v,
                 x: itm.x + (itm.v * imp.tm),
                 baseTime: (itm.baseTime || 0) + imp.tm,
             }

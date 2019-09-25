@@ -35,4 +35,28 @@ class Graphic extends React.Component {
     }
 }
 
-export default Graphic;
+class RunWorker extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { startTime: performance.now() };
+        this.tick = this.tick.bind(this);
+    }
+
+    componentDidMount() {
+        requestAnimationFrame(this.tick);
+    }
+
+    tick() {
+        this.setState({ t: performance.now() - this.state.startTime });
+        requestAnimationFrame(this.tick);
+    }
+
+    render() {
+        return <Graphic t={this.state.t} width={this.props.width} height={this.props.height} processor={this.proprs.processor} />;
+    }
+}
+
+export {
+    Graphic,
+    RunWorker,
+};

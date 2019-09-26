@@ -79,12 +79,11 @@ function updateItems(items, imp) {
         if (itm.type === types.WALL) return itm;
         if (itm === imp.b1 || itm === imp.b2) {
             const res = calcImpact(imp.b1, imp.b2);
-            return {
-                ...itm,
+            return Object.assign({}, itm, {
                 v: itm === imp.b1? res.v1:res.v2,//-itm.v,
                 x: itm.x + (itm.v * imp.tm),
                 baseTime: (itm.baseTime || 0) + imp.tm,
-            }
+            });
         }
         return itm;
     });
@@ -112,7 +111,5 @@ function sqrtCollideCalc(items, opts) {
     };
 }
 
-export {
-    sqrtCollideCalc,
-    types,
-};
+exports.sqrtCollideCalc = sqrtCollideCalc;
+exports.types = types;

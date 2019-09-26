@@ -15,11 +15,13 @@ calculated.items.map(itm=>{
     }
 });
 
-console.log(calculated.impacts.map(i=>{
+calculated.impacts.map(i=>{
     const showb = b=> {
         if(b.type === types.WALL) return 'WALL';
-        return ` m${b.m} x=${b.x.toFixed(2)} v=${b.v.toFixed(2)} baseTime=${(b.baseTime|| 0).toFixed(2)}`
+        const newx = b.x + (b.v*((i.spent || 0))-(b.baseTime||0));
+        return `m${b.m} x=${newx.toFixed(2)}(${b.x.toFixed(2)}->${b.v.toFixed(2)}) baseTime=${(b.baseTime|| 0).toFixed(2)}`
     };
 
-    return `${i.spent.toFixed(2).padStart(5)} ${i.tm.toFixed(2).padStart(5)} ${showb(i.b1)} ==> ${showb(i.b2)} `
-}));
+    const res =  `${i.spent.toFixed(2).padStart(5)} ${i.tm.toFixed(2).padStart(5)} ${showb(i.b1)} ==> ${showb(i.b2)} `
+    console.log(res);
+});

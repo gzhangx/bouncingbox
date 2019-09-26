@@ -42,6 +42,7 @@ function findFirstImpact(items, spent) {
                         b1,
                         b2,
                         tm,
+                        spent,
                     }
                 }
             }
@@ -90,22 +91,26 @@ function updateItems(items, imp) {
 }
 
 function sqrtCollideCalc(items, opts) {
-    const {tdelta, spent = 0, count = 0} = opts;
+    const {tdelta, spent = 0, count = 0, impacts = []} = opts;
     const timeLeft = tdelta - spent;
     if (timeLeft <= 0)  return {
+        impacts,
         items,
         count,
     };
     const imp = findFirstImpact(items, spent);
     if (!imp) return {
+        impacts,
         items,
         count,
     };
+    impacts.push(imp);
     if (imp.tm < timeLeft) {
         const next = updateItems(items, imp);
-        return sqrtCollideCalc(next, {tdelta, spent: spent+imp.tm, count: count+1});
+        return sqrtCollideCalc(next, {tdelta, spent: spent+imp.tm, count: count+1, impacts});
     }
     return {
+        impacts,
         items,
         count,
     };

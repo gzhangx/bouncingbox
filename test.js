@@ -8,9 +8,18 @@ const items = [
 ];
 const curt = 49;
 const calculated = sqrtCollideCalc(items, {tdelta: curt});
-console.log(calculated);
+//console.log(calculated);
 calculated.items.map(itm=>{
     if (itm.type === types.BLOCK) {
         console.log(`${itm.size} v=${itm.v.toFixed(2)} ${itm.x + itm.v*(curt - (itm.baseTime || 0))}`);
     }
 });
+
+console.log(calculated.impacts.map(i=>{
+    const showb = b=> {
+        if(b.type === types.WALL) return 'WALL';
+        return ` m${b.m} x=${b.x.toFixed(2)} v=${b.v.toFixed(2)} baseTime=${(b.baseTime|| 0).toFixed(2)}`
+    };
+
+    return `${i.spent.toFixed(2).padStart(5)} ${i.tm.toFixed(2).padStart(5)} ${showb(i.b1)} ==> ${showb(i.b2)} `
+}));

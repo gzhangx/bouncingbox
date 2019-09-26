@@ -20,7 +20,7 @@ function Coords() {
 
         function drawGroundSqure(x, size) {
             const w = size/2;
-            ctx.fillRect(x-w, translateY(w), w, w);
+            ctx.fillRect(x-w, translateY(size), size, size);
         }
         ctx.fillStyle = "#F00";
         drawLine(0,0, 0,height);

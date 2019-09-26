@@ -24,7 +24,7 @@ function tcheck(b1, b2, t) {
 
         const vdiff = (v2 - v1);
         if (vdiff === 0) return -99999;
-        const tm = (getX(b1) - getX(b2) - (Math.abs(size1 - size2) / 2)) / vdiff;
+        const tm = (getX(b1) - getX(b2) - ((size1 + size2) / 2)) / vdiff;
         return tm;
     }
 }
@@ -76,10 +76,10 @@ function calcImpact(b1, b2) {
 }
 
 function updateItems(items, imp) {
+    const res = calcImpact(imp.b1, imp.b2);
     return items.map(itm=> {
         if (itm.type === types.WALL) return itm;
         if (itm === imp.b1 || itm === imp.b2) {
-            const res = calcImpact(imp.b1, imp.b2);
             return Object.assign({}, itm, {
                 v: itm === imp.b1? res.v1:res.v2,//-itm.v,
                 x: itm.x + (itm.v * imp.tm),

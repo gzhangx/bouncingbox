@@ -91,32 +91,36 @@ function updateItems(items, imp, spent) {
     });
 }
 
-function sqrtCollideCalc(items, opts) {
-    const {tdelta, spent = 0, count = 0, impacts = []} = opts;
-    const timeLeft = tdelta - spent;
-    if (timeLeft <= 0)  return {
-        impacts,
-        items,
-        count,
-    };
+function sqrtCollideCalc(opts) {
+    const {tdelta, impacts = []} = opts;
+    let {spent = 0, items} = opts;
+    while(true) {
+        const timeLeft = tdelta - spent;
+        if (timeLeft <= 0) return {
+            impacts,
+            items,
+        };
 
-    const imp = findFirstImpact(items, spent);
-    if (!imp) return {
-        impacts,
-        items,
-        count,
-    };
-    impacts.push(imp);
-    if (imp.tm < timeLeft) {
-        const next = updateItems(items, imp, spent);
-        imp.next = next;
-        return sqrtCollideCalc(next, {tdelta, spent: spent+imp.tm, count: count+1, impacts});
+        const imp = findFirstImpact(items, spent);
+        if (!imp) return {
+            impacts,
+            items,
+        };
+
+        if (imp.tm < timeLeft) {
+            impacts.push(imp);
+            const next = updateItems(items, imp, spent);
+            imp.next = next;
+            items = next;
+            spent = spent + imp.tm;
+            continue;
+            //return sqrtCollideCalc(next, {tdelta, spent: spent + imp.tm, count: count + 1, impacts});
+        }
+        return {
+            impacts,
+            items,
+        };
     }
-    return {
-        impacts,
-        items,
-        count,
-    };
 }
 
 exports.sqrtCollideCalc = sqrtCollideCalc;

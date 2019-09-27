@@ -31,6 +31,14 @@ class MainPage extends React.Component {
         return this.state.startTime + performance.now() - (this.state.t || 0) - this.state.startTime;
     }
 
+    setCalculated = ()=>{
+        const curt = this.state.t;
+        const items = this.getOrigItems();
+        const opt = {tdelta: curt, items};
+        const calculated = sqrtCollideCalc(opt);
+        this.setState({calculated});
+    }
+
     processState = ()=>{
         let paused = false;
         
@@ -52,11 +60,8 @@ class MainPage extends React.Component {
             this.setState({t: tickDiff});
         }
 
-        const curt = this.state.t;
-        const items = this.getOrigItems();
-        const opt = {tdelta: curt, items};
-        const calculated = sqrtCollideCalc(opt);
-        this.setState({calculated});
+        this.setCalculated();
+        
     };
 
     render() {

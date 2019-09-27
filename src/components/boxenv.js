@@ -6,16 +6,9 @@ import {sqrtCollideCalc, types} from "../util/timeCalc";
 
 function Coords() {
 
-    function getOrigItems() {
-        return [
-            {type: types.WALL, x: 0, id: 'w1'},
-            {type: types.BLOCK, x: 390, v: -1, size: 100, id:'b1', m: 100},
-            {type: types.BLOCK, x: 200, v: 0, size: 50,id:'b2', m: 1},
-        ];
-    }
     function processor(ctx, contextInfo) {
-        const {t} = contextInfo.state;
-        console.log(contextInfo)
+        const {t, calculated} = contextInfo.state;
+        if (!calculated) return;
         const {width, height} = contextInfo.state.ui;
         function translateY(y) {
             return height - y;
@@ -42,14 +35,12 @@ function Coords() {
         //ctx.fillRect(0, 0, 100, 50);
 
 
-        const items = getOrigItems();
-        const curt = t/20;
-        const opt = {tdelta: curt, items};
-        const calculated = sqrtCollideCalc(opt);
-        ctx.fillText(`time=${(curt).toFixed(1)} ${calculated.impacts.length}`, 10, 10);
+        
+        //const calculated = sqrtCollideCalc(opt);
+        ctx.fillText(`time=${(t).toFixed(1)} ${calculated.impacts.length}`, 10, 10);
         calculated.items.map(itm=>{
             if (itm.type === types.BLOCK) {
-                drawGroundSqure(itm.x + itm.v*(curt - (itm.baseTime || 0)), itm.size, itm.m);
+                drawGroundSqure(itm.x + itm.v*(t - (itm.baseTime || 0)), itm.size, itm.m);
             }
         });
 

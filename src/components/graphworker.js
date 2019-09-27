@@ -47,7 +47,13 @@ class RunWorker extends React.Component {
     }
 
     tick() {
-        this.setState({ t: performance.now() - this.state.startTime });
+        if (this.props.contextState && this.props.contextState.paused) {
+            const tickDiff = performance.now() - (this.state.t || 0) - this.state.startTime;
+            this.setState({startTime: this.state.startTime + tickDiff});
+        }else {
+            const tickDiff = performance.now() - this.state.startTime;
+            this.setState({t: tickDiff});
+        }
         requestAnimationFrame(this.tick);
     }
 

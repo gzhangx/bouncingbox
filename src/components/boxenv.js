@@ -14,7 +14,7 @@ function Coords() {
         ];
     }
     function processor(ctx, contextInfo) {
-        const {t} = contextInfo;
+        const {t} = contextInfo.state;
         console.log(contextInfo)
         const {width, height} = contextInfo.state.ui;
         function translateY(y) {

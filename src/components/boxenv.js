@@ -34,7 +34,7 @@ function Coords() {
 
         const items = [
             {type: types.WALL, x: 0, id: 'w1'},
-            {type: types.BLOCK, x: 390, v: -1, size: 100, id:'b1', m: 10},
+            {type: types.BLOCK, x: 390, v: -1, size: 100, id:'b1', m: 1000000},
             {type: types.BLOCK, x: 200, v: 0, size: 50,id:'b2', m: 1},
         ];
         const curt = t/20;

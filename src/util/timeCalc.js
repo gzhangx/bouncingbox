@@ -37,7 +37,7 @@ function findFirstImpact(items, spent) {
             const b1 = items[i];
             const b2 = items[j];
             const tm = tcheck(b1,b2, spent);
-            if (tm > 0) {
+            if (tm > 0.00000000001) {
                 if (!minTime || (minTime.tm > tm)) {
                     minTime = {
                         b1,
@@ -83,7 +83,7 @@ function updateItems(items, imp, spent) {
         if (itm === imp.b1 || itm === imp.b2) {
             return Object.assign({}, itm, {
                 v: itm === imp.b1? res.v1:res.v2,//-itm.v,
-                x: itm.x + (itm.v * imp.tm),
+                x: itm.x + (itm.v * (imp.tm + spent - (itm.baseTime || 0))),
                 baseTime: spent + imp.tm, //(itm.baseTime || 0) + imp.tm,
             });
         }
@@ -99,6 +99,9 @@ function sqrtCollideCalc(items, opts) {
         items,
         count,
     };
+    if (Math.abs(spent-247) < 2) {
+        console.log('here');
+    }
     const imp = findFirstImpact(items, spent);
     if (!imp) return {
         impacts,

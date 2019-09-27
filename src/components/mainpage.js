@@ -25,9 +25,6 @@ class MainPage extends React.Component {
         return (
             <MainContext.Provider value={{state: this.state, setState: this.gsetState}}>
                 <Coords/>
-                <p>
-                    Edit <code>src/App.js</code> and save to reload.
-                </p>
                 <button onClick={this.pause}>Pause</button>
                 <button onClick={this.back}>Back</button>
                 <button onClick={this.forward}>Forward</button>

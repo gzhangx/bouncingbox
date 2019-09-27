@@ -8,14 +8,24 @@ class MainPage extends React.Component {
     pause = () => {
         this.setState({paused: !this.state.paused});
     };
+    reset = () => {
+        this.setState({reset: true});
+    };
+    gsetState = (stat)=>{
+        this.setState(stat);
+    };
+
     render() {
         return (
-            <MainContext.Provider value={this.state}>
+            <MainContext.Provider value={{state: this.state, setState: this.gsetState}}>
                 <Coords/>
                 <p>
                     Edit <code>src/App.js</code> and save to reload.
                 </p>
-                <button onClick={this.pause}/>
+                <button onClick={this.pause}>Pause</button>
+                <button onClick={this.back}>Back</button>
+                <button onClick={this.forward}>Forward</button>
+                <button onClick={this.reset}>Reset</button>
             </MainContext.Provider>
         );
     }

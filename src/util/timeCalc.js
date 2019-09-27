@@ -26,7 +26,6 @@ function tcheck(b1, b2, t) {
         const vdiff = (v2 - v1);
         if (vdiff === 0) return -99999;
         const tm = (getX(b1) - getX(b2) - ((size1 + size2) / 2)) / vdiff;
-        console.log(tm);
         return tm;
     }
 }
@@ -100,9 +99,7 @@ function sqrtCollideCalc(items, opts) {
         items,
         count,
     };
-    if (Math.abs(spent-247) < 2) {
-        console.log('here');
-    }
+
     const imp = findFirstImpact(items, spent);
     if (!imp) return {
         impacts,

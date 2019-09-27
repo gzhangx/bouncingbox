@@ -50,7 +50,6 @@ class RunWorker extends React.Component {
         let paused = false;
         const INC = 10;
         if (this.props.contextState){
-            console.log(this.props.contextState.state.forward);
             const tickDiff = performance.now() - (this.state.t || 0) - this.state.startTime;
             if (this.props.contextState.state.paused) {
                 paused = true;

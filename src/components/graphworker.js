@@ -47,19 +47,35 @@ class RunWorker extends React.Component {
     }
 
     tick() {
+        let paused = false;
+        const INC = 10;
         if (this.props.contextState){
-            console.log(this.props.contextState.state.reset);
+            console.log(this.props.contextState.state.forward);
+            const tickDiff = performance.now() - (this.state.t || 0) - this.state.startTime;
             if (this.props.contextState.state.paused) {
-                const tickDiff = performance.now() - (this.state.t || 0) - this.state.startTime;
+                paused = true;
                 this.setState({startTime: this.state.startTime + tickDiff});
-            } if (this.props.contextState.state.reset) {
+            }
+            if (this.props.contextState.state.reset) {
                 this.setState({startTime: performance.now()});
-                this.props.contextState.setState({reset: false})
+                this.props.contextState.setState({reset: false});
+            }
+            if (this.props.contextState.state.back) {
+                paused = true;
+                this.setState({startTime: this.state.startTime + tickDiff + INC, t: this.state.t - INC});
+                this.props.contextState.setState({back: false, paused: true})
+            }
+            if (this.props.contextState.state.forward) {
+                paused = true;
+                this.setState({startTime: this.state.startTime + tickDiff - INC, t: this.state.t + INC});
+                this.props.contextState.setState({forward: false, paused: true})
             }
         }
 
-        const tickDiff = performance.now() - this.state.startTime;
-        this.setState({t: tickDiff});
+        if (!paused) {
+            const tickDiff = performance.now() - this.state.startTime;
+            this.setState({t: tickDiff});
+        }
 
         requestAnimationFrame(this.tick);
     }

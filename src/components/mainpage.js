@@ -14,6 +14,12 @@ class MainPage extends React.Component {
     gsetState = (stat)=>{
         this.setState(stat);
     };
+    back = () => {
+        this.setState({back: !this.state.back});
+    };
+    forward = () => {
+        this.setState({forward: !this.state.forward});
+    };
 
     render() {
         return (

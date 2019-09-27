@@ -3,6 +3,7 @@ const types = {
     BLOCK: 'block',
 };
 
+const MAGIC0 = 0.00000000001;
 function tcheck(b1, b2, t) {
     function getX(b) {
         return b.x + ((t-(b.baseTime || 0))*b.v);
@@ -37,7 +38,7 @@ function findFirstImpact(items, spent) {
             const b1 = items[i];
             const b2 = items[j];
             const tm = tcheck(b1,b2, spent);
-            if (tm > 0.00000000001) {
+            if (tm > MAGIC0) {
                 if (!minTime || (minTime.tm > tm)) {
                     minTime = {
                         b1,

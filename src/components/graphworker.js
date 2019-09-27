@@ -11,7 +11,8 @@ class Graphic extends React.Component {
     }
 
     paint() {
-        const { width, height, processor } = this.props;
+        const { contextInfo, processor } = this.props;        
+        const {width, height} = contextInfo.state.ui;
         const context = this.refs.canvas.getContext("2d");
         context.clearRect(0, 0, width, height);
         context.save();
@@ -19,7 +20,7 @@ class Graphic extends React.Component {
         //context.rotate(rotation, 100, 100);
         //context.fillStyle = "#F00";
         //context.fillRect(-50, -50, 100, 100);
-        processor(context, this.props);
+        processor(context, contextInfo);
         context.restore();
     }
 
@@ -49,25 +50,26 @@ class RunWorker extends React.Component {
     tick() {
         let paused = false;
         const INC = 10;
-        if (this.props.contextState){
+        const contextInfo = this.props.contextInfo;
+        {
             const tickDiff = performance.now() - (this.state.t || 0) - this.state.startTime;
-            if (this.props.contextState.state.paused) {
+            if (contextInfo.state.paused) {
                 paused = true;
                 this.setState({startTime: this.state.startTime + tickDiff});
             }
-            if (this.props.contextState.state.reset) {
+            if (contextInfo.state.reset) {
                 this.setState({startTime: performance.now()});
-                this.props.contextState.setState({reset: false});
+                contextInfo.setState({reset: false});
             }
-            if (this.props.contextState.state.back) {
+            if (contextInfo.state.back) {
                 paused = true;
                 this.setState({startTime: this.state.startTime + tickDiff + INC, t: this.state.t - INC});
-                this.props.contextState.setState({back: false, paused: true})
+                contextInfo.setState({back: false, paused: true})
             }
-            if (this.props.contextState.state.forward) {
+            if (contextInfo.state.forward) {
                 paused = true;
                 this.setState({startTime: this.state.startTime + tickDiff - INC, t: this.state.t + INC});
-                this.props.contextState.setState({forward: false, paused: true})
+                contextInfo.setState({forward: false, paused: true})
             }
         }
 
@@ -80,7 +82,8 @@ class RunWorker extends React.Component {
     }
 
     render() {
-        return <Graphic t={this.state.t} width={this.props.width} height={this.props.height} processor={this.props.processor} />;
+        return <Graphic width={this.props.contextInfo.state.ui.width} height={this.props.contextInfo.state.ui.height}
+         contextInfo={Object.assign({}, {t:this.state.t},this.props.contextInfo)} processor={this.props.processor} />;
     }
 }
 

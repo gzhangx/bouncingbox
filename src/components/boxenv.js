@@ -13,9 +13,10 @@ function Coords() {
             {type: types.BLOCK, x: 200, v: 0, size: 50,id:'b2', m: 1},
         ];
     }
-    function processor(ctx, props) {
-        const {t, width, height} = props;
-
+    function processor(ctx, contextInfo) {
+        const {t} = contextInfo;
+        console.log(contextInfo)
+        const {width, height} = contextInfo.state.ui;
         function translateY(y) {
             return height - y;
         }
@@ -82,8 +83,8 @@ function Coords() {
 
     return (
         <MainContext.Consumer>{
-            (contextState)=> {
-                return <RunWorker width={512} height={512} processor={processor} contextState={contextState}/>
+            contextInfo=> {
+                return <RunWorker processor={processor} contextInfo={contextInfo}/>
             }
         }</MainContext.Consumer>
     );

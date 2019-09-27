@@ -2,55 +2,60 @@ import React from 'react';
 import Coords from './boxenv';
 
 import {MainContext, DEFAULT_STATE} from "./provider";
+import {sqrtCollideCalc, types} from "../util/timeCalc";
+const INC = 10;
 class MainPage extends React.Component {
     state = DEFAULT_STATE;
-
+    getOrigItems() {
+        return [
+            {type: types.WALL, x: 0, id: 'w1'},
+            {type: types.BLOCK, x: 390, v: -1, size: 100, id:'b1', m: 100},
+            {type: types.BLOCK, x: 200, v: 0, size: 50,id:'b2', m: 1},
+        ];
+    }
     pause = () => {
         this.setState({paused: !this.state.paused});
     };
     reset = () => {
-        this.setState({reset: true});
+        this.setState({startTime: performance.now(), paused: false});
     };
     gsetState = (stat)=>{
         this.setState(stat);
     };
-    back = () => {
-        this.setState({back: !this.state.back});
+
+    backForward = (inc) => {
+        this.setState({startTime: this.getPausedStartTime() + inc, t: this.state.t - inc, paused: true});
     };
-    forward = () => {
-        this.setState({forward: !this.state.forward});
-    };
+
+    getPausedStartTime = ()=>{
+        return this.state.startTime + performance.now() - (this.state.t || 0) - this.state.startTime;
+    }
 
     processState = ()=>{
         let paused = false;
-        const INC = 10;
+        
         const contextInfo = this.state;        
-        {
-            const tickDiff = performance.now() - (this.state.t || 0) - this.state.startTime;
-            if (contextInfo.paused) {
-                paused = true;
-                this.setState({startTime: this.state.startTime + tickDiff});
-            }
-            if (contextInfo.reset) {
-                this.setState({startTime: performance.now()});
-                this.setState({reset: false});
-            }
-            if (contextInfo.back) {
-                paused = true;
-                this.setState({startTime: this.state.startTime + tickDiff + INC, t: this.state.t - INC});
-                this.setState({back: false, paused: true})
-            }
-            if (contextInfo.forward) {
-                paused = true;
-                this.setState({startTime: this.state.startTime + tickDiff - INC, t: this.state.t + INC});
-                this.setState({forward: false, paused: true})
-            }
-        }
 
+        if (contextInfo.paused) {
+            paused = true;
+            this.setState({startTime: this.getPausedStartTime()});
+        }
+                    
+        if (contextInfo.forward) {
+            paused = true;
+            this.setState({startTime: this.getPausedStartTime() - INC, t: this.state.t + INC});
+            this.setState({forward: false, paused: true})
+        }
+        
         if (!paused) {
             const tickDiff = performance.now() - this.state.startTime;
             this.setState({t: tickDiff});
         }
+
+        const curt = this.state.t/20;
+        const items = this.getOrigItems();
+        const opt = {tdelta: curt, items};
+        const calculated = sqrtCollideCalc(opt);
     };
 
     render() {
@@ -58,8 +63,8 @@ class MainPage extends React.Component {
             <MainContext.Provider value={{state: this.state, setState: this.gsetState, processState: this.processState,}}>
                 <Coords/>
                 <button onClick={this.pause}>Pause</button>
-                <button onClick={this.back}>Back</button>
-                <button onClick={this.forward}>Forward</button>
+                <button onClick={()=>this.backForward(INC)}>Back</button>
+                <button onClick={()=>this.backForward(-INC)}>Forward</button>
                 <button onClick={this.reset}>Reset</button>
             </MainContext.Provider>
         );

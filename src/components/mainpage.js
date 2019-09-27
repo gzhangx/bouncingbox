@@ -31,10 +31,9 @@ class MainPage extends React.Component {
         return this.state.startTime + performance.now() - (this.state.t || 0) - this.state.startTime;
     }
 
-    setCalculated = ()=>{
-        const curt = this.state.t;
+    setCalculated = ()=>{        
         const items = this.getOrigItems();
-        const opt = {tdelta: curt, items};
+        const opt = {tdelta: -1, items};
         const calculated = sqrtCollideCalc(opt);
         this.setState({calculated});
     }

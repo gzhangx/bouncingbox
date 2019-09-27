@@ -1,27 +1,6 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Coords from './components/boxenv';
-
-import {MainContext, DEFAULT_STATE} from "./components/provider";
-class MainPage extends React.Component {
-  state = DEFAULT_STATE;
-
-  pause = () => {
-    this.setState({paused: !this.state.paused});
-  };
-  render() {
-    return (
-            <MainContext.Provider value={this.state}>
-              <Coords/>
-              <p>
-                Edit <code>src/App.js</code> and save to reload.
-              </p>
-              <button onClick={this.pause}/>
-            </MainContext.Provider>
-    );
-  }
-}
+import MainPage from './components/mainpage';
 
 function App() {
   return (

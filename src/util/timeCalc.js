@@ -96,16 +96,10 @@ function sqrtCollideCalc(opts) {
     let {spent = 0, items} = opts;
     while(true) {
         const timeLeft = tdelta - spent;
-        if (timeLeft <= 0) return {
-            impacts,
-            items,
-        };
+        if (timeLeft <= 0) break;
 
         const imp = findFirstImpact(items, spent);
-        if (!imp) return {
-            impacts,
-            items,
-        };
+        if (!imp) break;
 
         if (imp.tm < timeLeft) {
             impacts.push(imp);
@@ -116,11 +110,13 @@ function sqrtCollideCalc(opts) {
             continue;
             //return sqrtCollideCalc(next, {tdelta, spent: spent + imp.tm, count: count + 1, impacts});
         }
-        return {
-            impacts,
-            items,
-        };
+        //return {
+        //    impacts,
+        //    items,
+        //};
+        break;
     }
+    return Object.assign({}, opts, {spent, items, impacts});
 }
 
 exports.sqrtCollideCalc = sqrtCollideCalc;

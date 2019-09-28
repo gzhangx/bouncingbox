@@ -2,12 +2,12 @@ import {RunWorker} from "./graphworker";
 import React from "react";
 
 import {MainContext} from "./provider";
-import {sqrtCollideCalc, types} from "../util/timeCalc";
+import {types, generatePosByTime} from "../util/timeCalc";
 
 function Coords() {
 
     function processor(ctx, contextInfo) {
-        const {t, calculated} = contextInfo.state;
+        const {t, calculated, origItems} = contextInfo.state;
         if (!calculated) return;
         const {width, height} = contextInfo.state.ui;
         function translateY(y) {
@@ -35,14 +35,10 @@ function Coords() {
         //ctx.fillRect(0, 0, 100, 50);
 
 
-        
-        //const calculated = sqrtCollideCalc(opt);
+
+        const cItems = generatePosByTime(calculated, origItems, t);
         ctx.fillText(`time=${(t).toFixed(1)} ${calculated.impacts.length}`, 10, 10);
-        calculated.items.map(itm=>{
-            if (itm.type === types.BLOCK) {
-                drawGroundSqure(itm.x + itm.v*(t - (itm.baseTime || 0)), itm.size, itm.m);
-            }
-        });
+        cItems.map(itm=> drawGroundSqure(itm.x + itm.v * (t - (itm.baseTime || 0)), itm.size, itm.m));
 
         calculated.impacts.map((i,ind)=>{
             const showb = b=> {

@@ -29,14 +29,16 @@ class MainPage extends React.Component {
 
     getPausedStartTime = ()=>{
         return this.state.startTime + performance.now() - (this.state.t || 0) - this.state.startTime;
-    }
+    };
 
-    setCalculated = ()=>{        
-        const items = this.getOrigItems();
-        const opt = {tdelta: -1, items};
-        const calculated = sqrtCollideCalc(opt);
-        this.setState({calculated});
-    }
+    setCalculated = ()=>{
+        if (!this.state.calculated) {
+            const origItems = this.getOrigItems();
+            const opt = {tdelta: -1, items: origItems};
+            const calculated = sqrtCollideCalc(opt);
+            this.setState({calculated, origItems});
+        }
+    };
 
     processState = ()=>{
         let paused = false;

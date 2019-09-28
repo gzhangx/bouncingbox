@@ -1,4 +1,4 @@
-const {types, sqrtCollideCalc} = require('./src/util/timeCalc');
+const {types, sqrtCollideCalc, generatePosByTime} = require('./src/util/timeCalc');
 
 
 const items = [
@@ -14,6 +14,10 @@ calculated.items.map(itm=>{
         console.log(`${itm.size} v=${itm.v.toFixed(2)} ${itm.x + itm.v*(curt - (itm.baseTime || 0))}`);
     }
 });
+
+
+const temp = generatePosByTime(calculated, items, 200);
+console.log(temp);
 
 calculated.impacts.map(i=>{
     const showb = b=> {

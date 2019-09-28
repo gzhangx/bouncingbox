@@ -120,7 +120,27 @@ function sqrtCollideCalc(opts) {
 }
 
 function generatePosByTime(calculated, orig, t) {
-    
+    const imp = calculated.impacts.reduce((acc, imp)=> {
+        const impTm = imp.spent + imp.tm;
+        if (impTm <= t && (!acc || impTm > (acc.spent + acc.tm))) return imp;
+        return acc;
+    }, null);
+    if (!imp) {
+        return orig.filter(itm=>itm.type !== types.WALL).map(itm=>{
+            return Object.assign({},itm, {
+                x: itm.x + itm.v*t,
+            });
+        });
+    }
+
+    return imp.next.filter(itm=>itm.type !== types.WALL).map(itm=>{
+        return Object.assign({}, itm, {
+            x: itm.x + itm.v*(t - (itm.baseTime || 0)),
+        });
+    });
+
 }
+
 exports.sqrtCollideCalc = sqrtCollideCalc;
+exports.generatePosByTime = generatePosByTime;
 exports.types = types;

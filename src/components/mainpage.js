@@ -4,6 +4,7 @@ import Coords from './boxenv';
 import {MainContext, DEFAULT_STATE} from "./provider";
 import {sqrtCollideCalc, types} from "../util/timeCalc";
 const INC = 10;
+const SLOWFAC = 10;
 class MainPage extends React.Component {
     state = DEFAULT_STATE;
     getOrigItems() {
@@ -17,18 +18,11 @@ class MainPage extends React.Component {
         this.setState({paused: !this.state.paused});
     };
     reset = () => {
-        this.setState({startTime: performance.now(), paused: false});
-    };
-    gsetState = (stat)=>{
-        this.setState(stat);
+        this.setState({t: 0, paused: false});
     };
 
     backForward = (inc) => {
-        this.setState({startTime: this.getPausedStartTime() + inc, t: this.state.t - inc, paused: true});
-    };
-
-    getPausedStartTime = ()=>{
-        return this.state.startTime + performance.now() - (this.state.t || 0) - this.state.startTime;
+        this.setState({t: this.state.t - inc, paused: true});
     };
 
     setCalculated = ()=>{
@@ -41,24 +35,16 @@ class MainPage extends React.Component {
     };
 
     processState = ()=>{
-        let paused = false;
-        
-        const contextInfo = this.state;        
-
-        if (contextInfo.paused) {
-            paused = true;
-            this.setState({startTime: this.getPausedStartTime()});
-        }
-                    
-        if (contextInfo.forward) {
-            paused = true;
-            this.setState({startTime: this.getPausedStartTime() - INC, t: this.state.t + INC});
-            this.setState({forward: false, paused: true})
-        }
-        
-        if (!paused) {
-            const tickDiff = (performance.now() - this.state.startTime)/20;
-            this.setState({t: tickDiff});
+        if (this.state.paused) {
+            this.setState({lastTimeCheck: performance.now()});
+        } else{
+            const now = performance.now();
+            const tickDiff = (now - this.state.lastTimeCheck);
+            if (tickDiff < SLOWFAC) {
+                return;
+            }
+            const newT = this.state.t + (tickDiff/SLOWFAC);
+            this.setState({t: newT, lastTimeCheck: now});
         }
 
         this.setCalculated();
@@ -67,7 +53,7 @@ class MainPage extends React.Component {
 
     render() {
         return (
-            <MainContext.Provider value={{state: this.state, setState: this.gsetState, processState: this.processState,}}>
+            <MainContext.Provider value={{state: this.state, processState: this.processState,}}>
                 <Coords/>
                 <button onClick={this.pause}>Pause</button>
                 <button onClick={()=>this.backForward(INC)}>Back</button>

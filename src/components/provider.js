@@ -1,7 +1,7 @@
 import React from 'react';
 const DEFAULT_STATE = {
     paused: false,
-    startTime: performance.now(),
+    lastTimeCheck: 0,
     t: 0,
     ui: {
         width: 512,

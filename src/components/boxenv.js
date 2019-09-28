@@ -36,9 +36,10 @@ function Coords() {
 
 
 
-        const cItems = generatePosByTime(calculated, origItems, t);
-        ctx.fillText(`time=${(t).toFixed(1)} ${calculated.impacts.length}`, 10, 10);
-        cItems.map(itm=> drawGroundSqure(itm.x + itm.v * (t - (itm.baseTime || 0)), itm.size, itm.m));
+        const cItemsAll = generatePosByTime(calculated, origItems, t);
+        const cItems = cItemsAll.imp;
+        ctx.fillText(`time=${(t).toFixed(1)} ${cItemsAll.count}`, 10, 10);
+        cItems.map(itm=> drawGroundSqure(itm.x, itm.size, itm.m));
 
         calculated.impacts.map((i,ind)=>{
             const showb = b=> {

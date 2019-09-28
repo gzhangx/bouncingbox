@@ -10,10 +10,11 @@ const INC = 10;
 const SLOWFAC = 10;
 class MainPage extends React.Component {
     state = DEFAULT_STATE;
-    getOrigItems() {
+    getOrigItems(m) {
+        const size = 50*(1+ Math.log10(m));
         return [
             {type: types.WALL, x: 0, id: 'w1'},
-            {type: types.BLOCK, x: 390, v: -1, size: 100, id:'b1', m: 1000000},
+            {type: types.BLOCK, x: 390, v: -1, size, id:'b1', m},
             {type: types.BLOCK, x: 200, v: 0, size: 50,id:'b2', m: 1},
         ];
     }
@@ -35,8 +36,7 @@ class MainPage extends React.Component {
             this.setState({box2MassUsed: this.state.box2Mass, t:0});
         }
         if (needCalc) {
-            const origItems = this.getOrigItems();
-            origItems[1].m = this.state.box2Mass;
+            const origItems = this.getOrigItems(this.state.box2Mass);
             const opt = {tdelta: -1, items: origItems};
             const calculated = sqrtCollideCalc(opt);
             this.setState({calculated, origItems});

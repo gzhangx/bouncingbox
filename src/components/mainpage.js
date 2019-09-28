@@ -29,8 +29,14 @@ class MainPage extends React.Component {
     };
 
     setCalculated = ()=>{
-        if (!this.state.calculated) {
+        let needCalc = !this.state.calculated;
+        if (this.state.box2MassUsed != this.state.box2Mass) {
+            needCalc = true;
+            this.setState({box2MassUsed: this.state.box2Mass, t:0});
+        }
+        if (needCalc) {
             const origItems = this.getOrigItems();
+            origItems[1].m = this.state.box2Mass;
             const opt = {tdelta: -1, items: origItems};
             const calculated = sqrtCollideCalc(opt);
             this.setState({calculated, origItems});
@@ -58,7 +64,23 @@ class MainPage extends React.Component {
         return (
             <MainContext.Provider value={{state: this.state, processState: this.processState,}}>
                 <Coords/>
+                <form class="form-inline">
+                <div class="form-group">    
+                    <div class="input-group">
+                    <input type="number" class="form-control" placeholder="Mass" value={this.state.box2Mass} 
+                    onChange={v=>{
+                        let box2Mass =  parseInt(v.target.value);
+                        if (isNaN(box2Mass)) {
+                            box2Mass = 100;
+                        } 
+                        this.setState({box2Mass})
+                    }}
+                    />
+                    </div>
+                </div>
+                </form>
                 <ButtonToolbar>
+                
                 <Button variant="primary" className="align-self-center mr-2" onClick={this.pause}>Pause</Button>
                 <Button variant="primary" className="mr-2" onClick={()=>this.backForward(INC)}>Back</Button>
                 <Button  className="mr-2" onClick={()=>this.backForward(-INC)}>Forward</Button>

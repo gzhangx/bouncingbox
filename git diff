@@ -1,0 +1,12 @@
+[1mdiff --git a/src/components/mainpage.js b/src/components/mainpage.js[m
+[1mindex 506624d..11d68a8 100644[m
+[1m--- a/src/components/mainpage.js[m
+[1m+++ b/src/components/mainpage.js[m
+[36m@@ -44,6 +44,7 @@[m [mclass MainPage extends React.Component {[m
+                 paused = true;[m
+                 this.setState({startTime: this.state.startTime + tickDiff - INC, t: this.state.t + INC});[m
+                 this.setState({forward: false, paused: true})[m
+[32m+[m[41m                [m
+             }[m
+         }[m
+ [m

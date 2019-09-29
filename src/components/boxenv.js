@@ -13,8 +13,8 @@ const mvMvCenter = {
 function Coords() {
 
     function processor(ctx, contextInfo) {
-        const {t, calculated, origItems} = contextInfo.state;
-        if (!calculated) return;
+        const {t, calculated, origItems, showEnergy, currentItemStatus, lastImpactChanged} = contextInfo.state;
+        if (!calculated || !currentItemStatus) return;
         const {width, height, bottomSpace} = contextInfo.state.ui;
         function translateY(y) {
             return height - y - bottomSpace;
@@ -53,9 +53,19 @@ function Coords() {
 
 
 
-        const cItemsAll = generatePosByTime(calculated, origItems, t);
+        //const cItemsAll = generatePosByTime(calculated, origItems, t);
+        const cItemsAll = currentItemStatus;
         const cItems = cItemsAll.imp;
-        ctx.fillText(`time=${(t).toFixed(1)} ${cItemsAll.count}`, 10, 10);
+        ctx.fillText(`time=${(t).toFixed(1)}`, 10, 10);
+        const origFont = ctx.font;
+        let fontSize = 20;
+        let blimpFact = 30 - (t -lastImpactChanged);
+        if (blimpFact > 30) blimpFact = 30;
+        if (blimpFact < 0) blimpFact = 0;
+        fontSize += blimpFact;
+        ctx.font = `${fontSize}pt Calibri`;
+        ctx.fillText(`${cItemsAll.count}`, 10, 60);
+        ctx.font = origFont;
         cItems.map(itm=> drawGroundSqure(itm.x, itm.size, itm.m, itm.v));
 
         calculated.impacts.map((i,ind)=>{
@@ -82,38 +92,37 @@ function Coords() {
         });
 
 
-        const iblk1 = origItems.find(i=>i.id==='b1');
-        const r = Math.sqrt(iblk1.m)*iblk1.v;
-        const scale = Math.abs(mvMvCenter.scale/r);
-        ctx.beginPath();
-        ctx.arc(mvMvCenter.x, translateY(mvMvCenter.y), mvMvCenter.scale, 0, 2*Math.PI);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(mvMvCenter.x-mvMvCenter.scale, translateY(mvMvCenter.y), 3, 0, 2*Math.PI);
-        ctx.fill();
-        drawLine(mvMvCenter.x-mvMvCenter.scale, mvMvCenter.y, mvMvCenter.x+mvMvCenter.scale, mvMvCenter.y);
-        //ctx.fill();
-        calculated.impacts.reduce((acc, i) => {
-            if ((i.spent + i.tm) >= t) return;
-            const nb0 = i.next.find(it=>it.id === 'b1') || acc.b0;
-            const nb1 = i.next.find(it=>it.id === 'b2') || acc.b1;
-            const x1 = Math.sqrt(nb0.m)*nb0.v;
-            const y1 = Math.sqrt(nb1.m)*nb1.v;
+        if (showEnergy) {
+            const iblk1 = origItems.find(i => i.id === 'b1');
+            const r = Math.sqrt(iblk1.m) * iblk1.v;
+            const scale = Math.abs(mvMvCenter.scale / r);
+            ctx.beginPath();
+            ctx.arc(mvMvCenter.x, translateY(mvMvCenter.y), mvMvCenter.scale, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(mvMvCenter.x - mvMvCenter.scale, translateY(mvMvCenter.y), 3, 0, 2 * Math.PI);
+            ctx.fill();
+            drawLine(mvMvCenter.x - mvMvCenter.scale, mvMvCenter.y, mvMvCenter.x + mvMvCenter.scale, mvMvCenter.y);
+            //ctx.fill();
+            calculated.impacts.reduce((acc, i) => {
+                if ((i.spent + i.tm) >= t) return;
+                const nb0 = i.next.find(it => it.id === 'b1') || acc.b0;
+                const nb1 = i.next.find(it => it.id === 'b2') || acc.b1;
+                const x1 = Math.sqrt(nb0.m) * nb0.v;
+                const y1 = Math.sqrt(nb1.m) * nb1.v;
 
-            const x0 = Math.sqrt(acc.b0.m)*acc.b0.v;
-            const y0 = Math.sqrt(acc.b1.m)*acc.b1.v;
-            drawLine(x0*scale+mvMvCenter.x, y0*scale+mvMvCenter.y, x1*scale+mvMvCenter.x, y1*scale+mvMvCenter.y);
-            return {
-                b0: nb0,
-                b1: nb1,
-            }
-        }, {
-            b0: iblk1,
-            b1: origItems.find(i=>i.id==='b2'),
-        });
-
-        //drawGroundSqure(10 + (t/10), 20);
-        //drawGroundSqure(100, 40);
+                const x0 = Math.sqrt(acc.b0.m) * acc.b0.v;
+                const y0 = Math.sqrt(acc.b1.m) * acc.b1.v;
+                drawLine(x0 * scale + mvMvCenter.x, y0 * scale + mvMvCenter.y, x1 * scale + mvMvCenter.x, y1 * scale + mvMvCenter.y);
+                return {
+                    b0: nb0,
+                    b1: nb1,
+                }
+            }, {
+                b0: iblk1,
+                b1: origItems.find(i => i.id === 'b2'),
+            });
+        }
     }
 
     return (

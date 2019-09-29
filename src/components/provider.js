@@ -3,6 +3,8 @@ const DEFAULT_STATE = {
     paused: false,
     lastTimeCheck: 0,
     t: 0,
+    lastImpactChanged: 0,
+    showEnergy: false,
     box2Mass: 10000,
     box2MassUsed: 10000,
     ui: {

@@ -2,7 +2,7 @@ import React from 'react';
 import Coords from './boxenv';
 
 import {MainContext, DEFAULT_STATE} from "./provider";
-import {sqrtCollideCalc, types} from "../util/timeCalc";
+import {generatePosByTime, sqrtCollideCalc, types} from "../util/timeCalc";
 
 //import {Button,ButtonToolbar} from 'react-bootstrap';
 
@@ -35,6 +35,10 @@ class MainPage extends React.Component {
         this.setState({t: this.state.t - inc, paused: true});
     };
 
+    showEnergy = ()=>{
+        this.setState({showEnergy: !this.state.showEnergy});
+    };
+
     setCalculated = ()=>{
         let needCalc = !this.state.calculated;
         if (this.state.box2MassUsed != this.state.box2Mass) {
@@ -47,6 +51,13 @@ class MainPage extends React.Component {
             const calculated = sqrtCollideCalc(opt);
             this.setState({calculated, origItems});
         }
+
+        const currentItemStatus = generatePosByTime(this.state.calculated, this.state.origItems, this.state.t);
+        if (!this.state.currentItemStatus || this.state.currentItemStatus.count !== currentItemStatus.count) {
+            this.setState({lastImpactChanged: this.state.t});
+        }
+        this.setState({currentItemStatus});
+
     };
 
     processState = ()=>{
@@ -91,6 +102,7 @@ class MainPage extends React.Component {
                 <button variant="primary" className="mr-2" onClick={()=>this.backForward(INC)}>Back</button>
                 <button  className="mr-2" onClick={()=>this.backForward(-INC)}>Forward</button>
                 <button  className="mr-2" onClick={this.reset}>Reset</button>
+                    <button onClick={this.showEnergy}>Energy</button>
                 </buttonToolbar>
             </MainContext.Provider>
         );

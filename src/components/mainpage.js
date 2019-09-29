@@ -11,12 +11,18 @@ const SLOWFAC = 10;
 class MainPage extends React.Component {
     state = DEFAULT_STATE;
     getOrigItems(m) {
-        const size = 50*(1+ Math.log10(m));
-        return [
+        const size = 50*(1+ Math.log10(m));        
+        const res = [
             {type: types.WALL, x: 0, id: 'w1'},
             {type: types.BLOCK, x: 390, v: -1, size, id:'b1', m},
             {type: types.BLOCK, x: 200, v: 0, size: 50,id:'b2', m: 1},
         ];
+        const b1Pos = res[2].x+ (res[2].size/2);
+        const b2Ext = b1Pos+ (res[1].size/2);
+        if (b2Ext >= res[1].x) {
+            res[1].x = b2Ext + 100;
+        }
+        return res;
     }
     pause = () => {
         this.setState({paused: !this.state.paused});

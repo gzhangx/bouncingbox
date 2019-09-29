@@ -4,6 +4,12 @@ import React from "react";
 import {MainContext} from "./provider";
 import {types, generatePosByTime} from "../util/timeCalc";
 
+const mvMvCenter = {
+    x: 300,
+    y: 350,
+    scale: 120,
+};
+
 function Coords() {
 
     function processor(ctx, contextInfo) {
@@ -59,7 +65,7 @@ function Coords() {
                 return `m${b.m} x=${newx.toFixed(2)}(${b.x.toFixed(2)}->${b.v.toFixed(2)}) baseTime=${(b.baseTime|| 0).toFixed(2)}`
             };
 
-            const res =  `${i.spent.toFixed(2).padStart(5)} ${i.tm.toFixed(2).padStart(5)} ${showb(i.b1)} ==> ${showb(i.b2)} `
+            const res =  `${i.spent.toFixed(2).padStart(5)} ${i.tm.toFixed(2).padStart(5)} ${showb(i.blocks[0])} ==> ${showb(i.blocks[1])} `
             //ctx.fillText(res, 0, 25+(ind*30));
             if (i.next) {
                 const spent = i.next.reduce((acc, itm) => {
@@ -71,9 +77,30 @@ function Coords() {
                     const newx = b.x + (b.v * (spent - (b.baseTime || 0)));
                     return `m${b.m} x=${newx.toFixed(2)}(${b.x.toFixed(2)}->${b.v.toFixed(2)}) baseTime=${(b.baseTime || 0).toFixed(2)}`
                 };
-                //ctx.fillText('==>'+i.next.map(showb).filter(a=>a!=='WALL').join(','), 0, 40+(ind*30));
-            }
+                //ctx.fillText('==>'+i.next.map(showb).filter(a=>a!=='WALL').join(','), 0, 40+(ind*30));                
+            }                    
+        });
 
+
+        const iblk1 = origItems.find(i=>i.id==='b1');
+        const r = Math.sqrt(iblk1.m)*iblk1.v;
+        const scale = mvMvCenter.scale/r;
+        calculated.impacts.reduce((acc, i) => {            
+            const nb0 = i.next.find(it=>it.id === 'b1') || acc.b0;
+            const nb1 = i.next.find(it=>it.id === 'b2') || acc.b1;
+            const x1 = Math.sqrt(nb0.m)*nb0.v;
+            const y1 = Math.sqrt(nb1.m)*nb1.v;
+
+            const x0 = Math.sqrt(acc.b0.m)*acc.b0.v;
+            const y0 = Math.sqrt(acc.b1.m)*acc.b1.v;
+            drawLine(x0*scale+mvMvCenter.x, y0*scale+mvMvCenter.y, x1*scale+mvMvCenter.x, y1*scale+mvMvCenter.y);
+            return {
+                b0: nb0,
+                b1: nb1,
+            }
+        }, {
+            b0: iblk1,
+            b1: origItems.find(i=>i.id==='b2'),
         });
 
         //drawGroundSqure(10 + (t/10), 20);

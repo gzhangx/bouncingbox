@@ -40,8 +40,7 @@ function findFirstImpact(items, spent) {
             if (tm > MAGIC0) {
                 if (!minTime || (minTime.tm > tm)) {
                     minTime = {
-                        b1,
-                        b2,
+                        blocks:[b1,b2],
                         tm,
                         spent,
                     }
@@ -77,12 +76,12 @@ function calcImpact(b1, b2) {
 }
 
 function updateItems(items, imp, spent) {
-    const res = calcImpact(imp.b1, imp.b2);
+    const res = calcImpact(imp.blocks[0], imp.blocks[1]);
     return items.map(itm=> {
         if (itm.type === types.WALL) return itm;
-        if (itm === imp.b1 || itm === imp.b2) {
+        if (itm === imp.blocks[0] || itm === imp.blocks[1]) {
             return Object.assign({}, itm, {
-                v: itm === imp.b1? res.v1:res.v2,//-itm.v,
+                v: itm === imp.blocks[0]? res.v1:res.v2,//-itm.v,
                 x: itm.x + (itm.v * (imp.tm + spent - (itm.baseTime || 0))),
                 baseTime: spent + imp.tm, //(itm.baseTime || 0) + imp.tm,
             });

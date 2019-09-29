@@ -84,8 +84,17 @@ function Coords() {
 
         const iblk1 = origItems.find(i=>i.id==='b1');
         const r = Math.sqrt(iblk1.m)*iblk1.v;
-        const scale = mvMvCenter.scale/r;
-        calculated.impacts.reduce((acc, i) => {            
+        const scale = Math.abs(mvMvCenter.scale/r);
+        ctx.beginPath();
+        ctx.arc(mvMvCenter.x, translateY(mvMvCenter.y), mvMvCenter.scale, 0, 2*Math.PI);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(mvMvCenter.x-mvMvCenter.scale, translateY(mvMvCenter.y), 3, 0, 2*Math.PI);
+        ctx.fill();
+        drawLine(mvMvCenter.x-mvMvCenter.scale, mvMvCenter.y, mvMvCenter.x+mvMvCenter.scale, mvMvCenter.y);
+        //ctx.fill();
+        calculated.impacts.reduce((acc, i) => {
+            if ((i.spent + i.tm) >= t) return;
             const nb0 = i.next.find(it=>it.id === 'b1') || acc.b0;
             const nb1 = i.next.find(it=>it.id === 'b2') || acc.b1;
             const x1 = Math.sqrt(nb0.m)*nb0.v;

@@ -4,7 +4,7 @@ import Coords from './boxenv';
 import {MainContext, DEFAULT_STATE} from "./provider";
 import {sqrtCollideCalc, types} from "../util/timeCalc";
 
-import {Button,ButtonToolbar} from 'react-bootstrap';
+//import {Button,ButtonToolbar} from 'react-bootstrap';
 
 const INC = 10;
 const SLOWFAC = 10;
@@ -85,13 +85,13 @@ class MainPage extends React.Component {
                     </div>
                 </div>
                 </form>
-                <ButtonToolbar>
+                <buttonToolbar>
                 
-                <Button variant="primary" className="align-self-center mr-2" onClick={this.pause}>Pause</Button>
-                <Button variant="primary" className="mr-2" onClick={()=>this.backForward(INC)}>Back</Button>
-                <Button  className="mr-2" onClick={()=>this.backForward(-INC)}>Forward</Button>
-                <Button  className="mr-2" onClick={this.reset}>Reset</Button>
-                </ButtonToolbar>
+                <button variant="primary" className="align-self-center mr-2" onClick={this.pause}>Pause</button>
+                <button variant="primary" className="mr-2" onClick={()=>this.backForward(INC)}>Back</button>
+                <button  className="mr-2" onClick={()=>this.backForward(-INC)}>Forward</button>
+                <button  className="mr-2" onClick={this.reset}>Reset</button>
+                </buttonToolbar>
             </MainContext.Provider>
         );
     }

@@ -9,9 +9,9 @@ function Coords() {
     function processor(ctx, contextInfo) {
         const {t, calculated, origItems} = contextInfo.state;
         if (!calculated) return;
-        const {width, height} = contextInfo.state.ui;
+        const {width, height, bottomSpace} = contextInfo.state.ui;
         function translateY(y) {
-            return height - y;
+            return height - y - bottomSpace;
         }
         function drawLine(x,y,x1,y1) {
             ctx.beginPath();
@@ -20,13 +20,24 @@ function Coords() {
             ctx.stroke();
         }
 
-        function drawGroundSqure(x, size, m) {
+        function drawGroundSqure(x, size, m, v) {
             const w = size/2;
             ctx.beginPath();
             ctx.rect(x-w, translateY(size), size, size);
             ctx.stroke();
-            ctx.fillText(x.toFixed(1), x - w + 1, translateY(size)+15);
-            ctx.fillText(m, x - w + 1, translateY(size)+w);
+            ctx.fillText(x.toFixed(1), x - w + 1, translateY(5)+15);
+            m = `m = ${m}`;
+            const msize = ctx.measureText(m);
+            const hsize = ctx.measureText('M');
+            ctx.fillText(m, x - (msize.width/2), translateY(size) + w - 10);
+            v = v.toFixed(2);
+            const vsize = ctx.measureText(v);            
+            ctx.fillText(v, x - (vsize.width/2), translateY(size)+ w + hsize.width + 5 );
+            ctx.beginPath();
+            ctx.arc(x, translateY(size) + w, 2, 0, 2*Math.PI);
+            ctx.fill();
+            drawLine(x, w,  x + (v*5), w);
+            //ctx.restore();
         }
         ctx.fillStyle = "#F00";
         ctx.strokeStyle = "#F00";
@@ -39,7 +50,7 @@ function Coords() {
         const cItemsAll = generatePosByTime(calculated, origItems, t);
         const cItems = cItemsAll.imp;
         ctx.fillText(`time=${(t).toFixed(1)} ${cItemsAll.count}`, 10, 10);
-        cItems.map(itm=> drawGroundSqure(itm.x, itm.size, itm.m));
+        cItems.map(itm=> drawGroundSqure(itm.x, itm.size, itm.m, itm.v));
 
         calculated.impacts.map((i,ind)=>{
             const showb = b=> {

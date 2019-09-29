@@ -16,10 +16,6 @@ class Graphic extends React.Component {
         const context = this.refs.canvas.getContext("2d");
         context.clearRect(0, 0, width, height);
         context.save();
-        //context.translate(100, 100);
-        //context.rotate(rotation, 100, 100);
-        //context.fillStyle = "#F00";
-        //context.fillRect(-50, -50, 100, 100);
         processor(context, contextInfo);
         context.restore();
     }
@@ -38,8 +34,7 @@ class Graphic extends React.Component {
 
 class RunWorker extends React.Component {
     constructor(props) {
-        super(props);
-        this.state = { startTime: performance.now() };
+        super(props);        
         this.tick = this.tick.bind(this);
     }
 
@@ -47,8 +42,7 @@ class RunWorker extends React.Component {
         requestAnimationFrame(this.tick);
     }
 
-    tick() {
-        
+    tick() {        
         const contextInfo = this.props.contextInfo;
         contextInfo.processState();
         requestAnimationFrame(this.tick);

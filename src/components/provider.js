@@ -8,6 +8,7 @@ const DEFAULT_STATE = {
     ui: {
         width: 512,
         height: 512,
+        bottomSpace: 20,
     }
 };
 const MainContext = React.createContext(DEFAULT_STATE);

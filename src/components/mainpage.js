@@ -50,6 +50,11 @@ class MainPage extends React.Component {
             const opt = {tdelta: -1, items: origItems};
             const calculated = sqrtCollideCalc(opt);
             this.setState({calculated, origItems});
+        }else {
+            const opt = Object.assign({}, this.state.calculated, {tdelta: this.state.t});
+            const calculated = sqrtCollideCalc(opt);
+            calculated.impacts = calculated.impacts;
+            this.setState({calculated});
         }
 
         const currentItemStatus = generatePosByTime(this.state.calculated, this.state.origItems, this.state.t);

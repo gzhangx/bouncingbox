@@ -59,10 +59,12 @@ function Coords() {
         ctx.fillText(`time=${(t).toFixed(1)}`, 10, 10);
         const origFont = ctx.font;
         let fontSize = 20;
-        let blimpFact = 30 - (t -lastImpactChanged);
-        if (blimpFact > 30) blimpFact = 30;
-        if (blimpFact < 0) blimpFact = 0;
-        fontSize += blimpFact;
+        if (cItemsAll.count > 0) {
+            let blimpFact = 30 - (t - lastImpactChanged);
+            if (blimpFact > 30) blimpFact = 30;
+            if (blimpFact < 0) blimpFact = 0;
+            fontSize += blimpFact;
+        }
         ctx.font = `${fontSize}pt Calibri`;
         ctx.fillText(`${cItemsAll.count}`, 10, 60);
         ctx.font = origFont;

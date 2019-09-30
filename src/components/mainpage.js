@@ -5,7 +5,7 @@ import EnergyEnv from './energyenv';
 import {MainContext, DEFAULT_STATE} from "./provider";
 import {generatePosByTime, sqrtCollideCalc, types} from "../util/timeCalc";
 
-import {Button,ButtonToolbar, FormCheck} from 'react-bootstrap';
+import {Button,ButtonToolbar, FormCheck, Form, FormGroup} from 'react-bootstrap';
 
 const INC = 10;
 const SLOWFAC = 10;
@@ -127,15 +127,19 @@ class MainPage extends React.Component {
                     </div>
                 </div>
                 </form>
-                <ButtonToolbar>
-                    <Button variant="primary" className="align-self-center mr-2" onClick={this.pause}>Pause</Button>
-                    <Button variant="primary" className="mr-2" onClick={()=>this.backForward(INC)}>Back</Button>
-                    <Button  className="mr-2" onClick={()=>this.backForward(-INC)}>Forward</Button>
-                    <Button  className="mr-2" onClick={()=>this.nextImpact()}> >> </Button>
-                    <Button  className="mr-2" onClick={this.reset}>Reset</Button>
-                    <Button onClick={this.showEnergy}>Energy</Button>
-                    <FormCheck checked={this.state.stopOnImpact} onChange={this.stopOnImpactChanged} ></FormCheck>
-                </ButtonToolbar>
+
+                    <Form>
+                        <Form.Group>
+                            <Form.Check inline type="checkbox" label="Pause" checked={this.state.paused} onChange={this.pause} />
+                            <Button variant="primary" className="mr-2" onClick={()=>this.backForward(INC)}>Back</Button>
+                            <Button className="mr-2" onClick={()=>this.backForward(-INC)}>Forward</Button>
+                            <Button className="mr-2" onClick={()=>this.nextImpact()}> >> </Button>
+                            <Button className="mr-2" onClick={this.reset}>Reset</Button>
+                            <Button className="mr-2"  onClick={this.showEnergy}>Energy</Button>
+                            <Form.Check inline type="checkbox" label="Stop on Impact" checked={this.state.stopOnImpact} onChange={this.stopOnImpactChanged} />
+                        </Form.Group>
+                    </Form>
+
             </MainContext.Provider>
         );
     }

@@ -7,8 +7,8 @@ const items = [
     {type: types.BLOCK, x: 200, v: 0, size: 50,id:'b2', m: 1},
 ];
 const curt = 400;
-const calculated = sqrtCollideCalc({items, tdelta: curt});
-//const calculated = sqrtCollideCalc(Object.assign({}, calculated1, {tdelta: 400}));
+const calculated = sqrtCollideCalc({items, t: curt});
+//const calculated = sqrtCollideCalc(Object.assign({}, calculated1, {t: 400}));
 //console.log(calculated);
 calculated.items.map(itm=>{
     if (itm.type === types.BLOCK) {

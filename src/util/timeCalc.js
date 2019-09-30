@@ -91,17 +91,17 @@ function updateItems(items, imp, spent) {
 }
 
 function sqrtCollideCalc(opts) {
-    const {tdelta, impacts = []} = opts;
+    const {t, impacts = [], maxImpactsToKeep = 5000, toIndex} = opts;
     let {spent = 0, items} = opts;
     while(true) {
-        const timeLeft = tdelta < 0? 1 : tdelta - spent;
-        if (timeLeft <= 0) break;
+        const timeLeft = t < 0? 1 : t - spent;
+        if (timeLeft <= 0 && !toIndex) break;
 
         const imp = findFirstImpact(items, spent);
         if (!imp) break;
 
-        if (imp.tm < timeLeft || tdelta < 0) {
-            if (impacts.length > 5000) {
+        if (imp.tm < timeLeft || t < 0 || toIndex) {
+            if (impacts.length > maxImpactsToKeep) {
                 impacts.shift();
             }
             if (impacts.length === 0) {
@@ -114,13 +114,11 @@ function sqrtCollideCalc(opts) {
             imp.next = next;
             items = next;
             spent = spent + imp.tm;
+            if (toIndex) {
+                if (toIndex <= imp.index) break;
+            }
             continue;
-            //return sqrtCollideCalc(next, {tdelta, spent: spent + imp.tm, count: count + 1, impacts});
         }
-        //return {
-        //    impacts,
-        //    items,
-        //};
         break;
     }
     return Object.assign({}, opts, {spent, items, impacts});

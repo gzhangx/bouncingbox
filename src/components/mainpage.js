@@ -5,7 +5,7 @@ import EnergyEnv from './energyenv';
 import {MainContext, DEFAULT_STATE} from "./provider";
 import {generatePosByTime, sqrtCollideCalc, types} from "../util/timeCalc";
 
-import {Button,ButtonToolbar} from 'react-bootstrap';
+import {Button,ButtonToolbar, FormCheck} from 'react-bootstrap';
 
 const INC = 10;
 const SLOWFAC = 10;
@@ -29,15 +29,38 @@ class MainPage extends React.Component {
         this.setState({paused: !this.state.paused});
     };
     reset = () => {
-        this.setState({t: 0, paused: false, calculated: null});
+        this.setState({t: 0, curImpactCount:0 ,paused: false, calculated: null});
     };
 
     backForward = (inc) => {
         this.setState({t: this.state.t - inc, paused: true, calculated: null});
     };
 
+    nextImpact = ()=>{
+        const lastImp = this.state.calculated.impacts[this.state.calculated.impacts.length - 1];
+        const opt = Object.assign({toIndex: lastImp.index + 1}, this.state.calculated, {t: this.state.t});
+        const calculated = sqrtCollideCalc(opt);
+        const imp = this.state.calculated.impacts[this.state.calculated.impacts.length - 1];
+        this.setState({t: imp.spent, paused: true, calculated, curImpactCount: imp.index});
+        this.checkImpactChange();
+    };
+    stopOnImpactChanged = ()=>{
+        this.setState({stopOnImpact: !this.state.stopOnImpact});
+    };
+
     showEnergy = ()=>{
         this.setState({showEnergy: !this.state.showEnergy});
+    };
+
+    checkImpactChange = ()=>{
+        const imp = this.state.calculated.impacts[this.state.calculated.impacts.length - 1];
+        if (imp && imp.index !== this.state.curImpactCount) {
+            const st = {curImpactCount: imp.index};
+            if (this.state.stopOnImpact) {
+                st.paused = true;
+            }
+            this.setState(st);
+        }
     };
 
     setCalculated = ()=>{
@@ -48,13 +71,12 @@ class MainPage extends React.Component {
         }
         if (needCalc) {
             const origItems = this.getOrigItems(this.state.box2Mass);
-            const opt = {tdelta: this.state.t, items: origItems};
+            const opt = {t: this.state.t, items: origItems};
             const calculated = sqrtCollideCalc(opt);
             this.setState({calculated, origItems});
         }else {
-            const opt = Object.assign({}, this.state.calculated, {tdelta: this.state.t});
+            const opt = Object.assign({}, this.state.calculated, {t: this.state.t});
             const calculated = sqrtCollideCalc(opt);
-            calculated.impacts = calculated.impacts;
             this.setState({calculated});
         }
 
@@ -63,7 +85,7 @@ class MainPage extends React.Component {
             this.setState({lastImpactChanged: this.state.t});
         }
         this.setState({currentItemStatus});
-
+        this.checkImpactChange();
     };
 
     processState = ()=>{
@@ -109,8 +131,10 @@ class MainPage extends React.Component {
                     <Button variant="primary" className="align-self-center mr-2" onClick={this.pause}>Pause</Button>
                     <Button variant="primary" className="mr-2" onClick={()=>this.backForward(INC)}>Back</Button>
                     <Button  className="mr-2" onClick={()=>this.backForward(-INC)}>Forward</Button>
+                    <Button  className="mr-2" onClick={()=>this.nextImpact()}> >> </Button>
                     <Button  className="mr-2" onClick={this.reset}>Reset</Button>
                     <Button onClick={this.showEnergy}>Energy</Button>
+                    <FormCheck checked={this.state.stopOnImpact} onChange={this.stopOnImpactChanged} ></FormCheck>
                 </ButtonToolbar>
             </MainContext.Provider>
         );

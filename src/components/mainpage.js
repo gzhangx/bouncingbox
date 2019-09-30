@@ -1,5 +1,6 @@
 import React from 'react';
 import Coords from './boxenv';
+import EnergyEnv from './energyenv';
 
 import {MainContext, DEFAULT_STATE} from "./provider";
 import {generatePosByTime, sqrtCollideCalc, types} from "../util/timeCalc";
@@ -85,7 +86,10 @@ class MainPage extends React.Component {
     render() {
         return (
             <MainContext.Provider value={{state: this.state, processState: this.processState,}}>
+                <div>
                 <Coords/>
+                    {this.state.showEnergy?<EnergyEnv/>:null}
+                </div>
                 <form class="form-inline">
                 <div class="form-group">    
                     <div class="input-group">

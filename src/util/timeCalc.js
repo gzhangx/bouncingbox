@@ -101,7 +101,7 @@ function sqrtCollideCalc(opts) {
         if (!imp) break;
 
         if (imp.tm < timeLeft || tdelta < 0) {
-            if (impacts.length > 1) {
+            if (impacts.length > 5000) {
                 impacts.shift();
             }
             if (impacts.length === 0) {

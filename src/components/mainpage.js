@@ -28,11 +28,11 @@ class MainPage extends React.Component {
         this.setState({paused: !this.state.paused});
     };
     reset = () => {
-        this.setState({t: 0, paused: false});
+        this.setState({t: 0, paused: false, calculated: null});
     };
 
     backForward = (inc) => {
-        this.setState({t: this.state.t - inc, paused: true});
+        this.setState({t: this.state.t - inc, paused: true, calculated: null});
     };
 
     showEnergy = ()=>{
@@ -47,7 +47,7 @@ class MainPage extends React.Component {
         }
         if (needCalc) {
             const origItems = this.getOrigItems(this.state.box2Mass);
-            const opt = {tdelta: -1, items: origItems};
+            const opt = {tdelta: this.state.t, items: origItems};
             const calculated = sqrtCollideCalc(opt);
             this.setState({calculated, origItems});
         }else {

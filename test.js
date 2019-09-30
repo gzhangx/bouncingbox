@@ -6,8 +6,9 @@ const items = [
     {type: types.BLOCK, x: 390, v: -1, size: 100, id:'b1', m: 10},
     {type: types.BLOCK, x: 200, v: 0, size: 50,id:'b2', m: 1},
 ];
-const curt = -1;
+const curt = 400;
 const calculated = sqrtCollideCalc({items, tdelta: curt});
+//const calculated = sqrtCollideCalc(Object.assign({}, calculated1, {tdelta: 400}));
 //console.log(calculated);
 calculated.items.map(itm=>{
     if (itm.type === types.BLOCK) {
@@ -26,7 +27,7 @@ calculated.impacts.map(i=>{
         return `m${b.m} x=${newx.toFixed(2)}(${b.x.toFixed(2)}->${b.v.toFixed(2)}) baseTime=${(b.baseTime|| 0).toFixed(2)}`
     };
 
-    const res =  `${i.spent.toFixed(2).padStart(5)} ${i.tm.toFixed(2).padStart(5)} ${showb(i.b1)} ==> ${showb(i.b2)} `
+    const res =  `${i.spent.toFixed(2).padStart(5)} ${i.tm.toFixed(2).padStart(5)} ${showb(i.blocks[0])} ==> ${showb(i.blocks[1])} `
     console.log(res);
     if (i.next) {
         const spent = i.next.reduce((acc, itm) => {

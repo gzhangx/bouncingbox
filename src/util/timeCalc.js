@@ -101,6 +101,14 @@ function sqrtCollideCalc(opts) {
         if (!imp) break;
 
         if (imp.tm < timeLeft || tdelta < 0) {
+            if (impacts.length > 1) {
+                impacts.shift();
+            }
+            if (impacts.length === 0) {
+                imp.index = 1;
+            }else {
+                imp.index = impacts[impacts.length - 1].index + 1;
+            }
             impacts.push(imp);
             const next = updateItems(items, imp, spent);
             imp.next = next;
@@ -119,12 +127,9 @@ function sqrtCollideCalc(opts) {
 }
 
 function generatePosByTime(calculated, orig, t) {
-    const imp = calculated.impacts.reduce((acc, imp, index)=> {
+    const imp = calculated.impacts.reduce((acc, imp)=> {
         const impTm = imp.spent + imp.tm;
-        if (impTm <= t && (!acc || impTm > (acc.imp.spent + acc.imp.tm))) return {
-            imp,
-            index: index + 1,
-        };
+        if (impTm <= t && (!acc || impTm > (acc.spent + acc.tm))) return imp;
         return acc;
     }, null);
     if (!imp) {
@@ -139,7 +144,7 @@ function generatePosByTime(calculated, orig, t) {
         }
     }
 
-    const resAry = imp.imp.next.filter(itm=>itm.type !== types.WALL).map(itm=>{
+    const resAry = imp.next.filter(itm=>itm.type !== types.WALL).map(itm=>{
         return Object.assign({}, itm, {
             x: itm.x + itm.v*(t - (itm.baseTime || 0)),
         });

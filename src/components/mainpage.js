@@ -93,7 +93,7 @@ class MainPage extends React.Component {
                 <form class="form-inline">
                 <div class="form-group">    
                     <div class="input-group">
-                    <input type="number" class="form-control" placeholder="Mass" value={this.state.box2Mass} 
+                    <input type="number" class="form-control mb-2" placeholder="Mass" value={this.state.box2Mass}
                     onChange={v=>{
                         let box2Mass =  parseInt(v.target.value);
                         if (isNaN(box2Mass)) {

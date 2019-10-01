@@ -1,6 +1,6 @@
 import React from 'react';
 const DEFAULT_STATE = {
-    paused: false,
+    paused: true,
     lastTimeCheck: 0,
     t: 0,
     stopOnImpact: false,

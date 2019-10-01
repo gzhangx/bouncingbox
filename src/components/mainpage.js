@@ -57,7 +57,7 @@ class MainPage extends React.Component {
 
         const currentItemStatus = generatePosByTime(this.state.calculated, this.state.origItems, this.state.t);
         if (!this.state.currentItemStatus || this.state.currentItemStatus.count !== currentItemStatus.count) {
-            this.audio.play();
+            if (currentItemStatus.count) this.audio.play();
             this.setState({lastImpactChanged: this.state.t});
         }
         this.setState({currentItemStatus});

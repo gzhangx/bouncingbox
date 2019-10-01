@@ -6,9 +6,12 @@ import {generatePosByTime, sqrtCollideCalc, types} from "../util/timeCalc";
 
 import {Button,ButtonToolbar} from 'react-bootstrap';
 
+import impactSound from '../media/KbdSpacebar.wav';
+
 const INC = 10;
 const SLOWFAC = 10;
 class MainPage extends React.Component {
+    audio = new Audio(impactSound);
     state = DEFAULT_STATE;
     getOrigItems(m) {
         const size = 50*(1+ Math.log10(m));        
@@ -54,6 +57,7 @@ class MainPage extends React.Component {
 
         const currentItemStatus = generatePosByTime(this.state.calculated, this.state.origItems, this.state.t);
         if (!this.state.currentItemStatus || this.state.currentItemStatus.count !== currentItemStatus.count) {
+            this.audio.play();
             this.setState({lastImpactChanged: this.state.t});
         }
         this.setState({currentItemStatus});

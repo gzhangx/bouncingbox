@@ -12,6 +12,7 @@ function Coords() {
         if (!needRedraw) {
             return;
         }
+        const COLOR = "#FFF";
 
         if (!ctx)return true;
         const {width, height, bottomSpace} = contextInfo.state.ui;
@@ -41,11 +42,12 @@ function Coords() {
             ctx.beginPath();
             ctx.arc(x, translateY(size) + w, 2, 0, 2*Math.PI);
             ctx.fill();
-            drawLine(x, w,  x + (v*5), w);
+            if (v !== 0)
+                drawLine(x, w,  x + Math.sign(v)*Math.log(Math.abs(v)+10)*5, w);
             //ctx.restore();
         }
-        ctx.fillStyle = "#F00";
-        ctx.strokeStyle = "#F00";
+        ctx.fillStyle = COLOR;
+        ctx.strokeStyle = COLOR;
         drawLine(0,0, 0,height);
         drawLine(0,0, width,0);
         //ctx.fillRect(0, 0, 100, 50);
@@ -69,6 +71,7 @@ function Coords() {
         ctx.font = origFont;
         cItems.map(itm=> drawGroundSqure(itm.x, itm.size, itm.m, itm.v));
 
+        /*
         calculated.impacts.map((i,ind)=>{
             const showb = b=> {
                 if(b.type === types.WALL) return 'WALL';
@@ -91,6 +94,7 @@ function Coords() {
                 //ctx.fillText('==>'+i.next.map(showb).filter(a=>a!=='WALL').join(','), 0, 40+(ind*30));                
             }                    
         });
+        */
     }
 
     return (

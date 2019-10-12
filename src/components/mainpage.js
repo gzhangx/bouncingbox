@@ -36,7 +36,7 @@ class MainPage extends React.Component {
     };
 
     backForward = (inc) => {
-        this.setState({t: this.state.t - inc, paused: true, calculated: null, first: true});
+        this.setState({t: this.state.t - inc, paused: true, calculated: null, oneTimeDraw: true});
     };
 
     nextImpact = ()=>{
@@ -44,7 +44,7 @@ class MainPage extends React.Component {
         const opt = Object.assign({toIndex: lastImp.index + 1}, this.state.calculated, {t: this.state.t});
         const calculated = sqrtCollideCalc(opt);
         const imp = this.state.calculated.impacts[this.state.calculated.impacts.length - 1];
-        this.setState({t: imp.spent, paused: true, calculated, curImpactCount: imp.index, first: true});
+        this.setState({t: imp.spent, paused: true, calculated, curImpactCount: imp.index, oneTimeDraw: true});
         this.checkImpactChange();
     };
     stopOnImpactChanged = ()=>{
@@ -52,7 +52,7 @@ class MainPage extends React.Component {
     };
 
     showEnergy = ()=>{
-        this.setState({showEnergy: !this.state.showEnergy, first: true});
+        this.setState({showEnergy: !this.state.showEnergy, oneTimeDraw: true});
     };
 
     checkImpactChange = ()=>{
@@ -94,7 +94,7 @@ class MainPage extends React.Component {
 
     processState = ()=>{
         if (this.state.paused) {
-            this.setState({lastTimeCheck: performance.now(),needRedraw: this.state.first, first: false});
+            this.setState({lastTimeCheck: performance.now(),needRedraw: this.state.oneTimeDraw, oneTimeDraw: false});
         } else{
             const now = performance.now();
             const tickDiff = (now - this.state.lastTimeCheck);
@@ -103,7 +103,7 @@ class MainPage extends React.Component {
                 return;
             }
             const newT = this.state.t + (tickDiff/SLOWFAC);
-            this.setState({t: newT, oldT: this.state.t, lastTimeCheck: now, needRedraw: true});
+            this.setState({t: newT, lastTimeCheck: now, needRedraw: true});
         }
 
         this.setCalculated();
@@ -126,7 +126,7 @@ class MainPage extends React.Component {
                         if (isNaN(box2Mass)) {
                             box2Mass = 100;
                         } 
-                        this.setState({box2Mass})
+                        this.setState({box2Mass, oneTimeDraw: true})
                     }}
                     />
                     </div>

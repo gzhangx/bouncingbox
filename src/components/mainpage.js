@@ -36,7 +36,7 @@ class MainPage extends React.Component {
     };
 
     backForward = (inc) => {
-        this.setState({t: this.state.t - inc, paused: true, calculated: null});
+        this.setState({t: this.state.t - inc, paused: true, calculated: null, first: true});
     };
 
     nextImpact = ()=>{
@@ -44,7 +44,7 @@ class MainPage extends React.Component {
         const opt = Object.assign({toIndex: lastImp.index + 1}, this.state.calculated, {t: this.state.t});
         const calculated = sqrtCollideCalc(opt);
         const imp = this.state.calculated.impacts[this.state.calculated.impacts.length - 1];
-        this.setState({t: imp.spent, paused: true, calculated, curImpactCount: imp.index});
+        this.setState({t: imp.spent, paused: true, calculated, curImpactCount: imp.index, first: true});
         this.checkImpactChange();
     };
     stopOnImpactChanged = ()=>{
@@ -94,15 +94,16 @@ class MainPage extends React.Component {
 
     processState = ()=>{
         if (this.state.paused) {
-            this.setState({lastTimeCheck: performance.now()});
+            this.setState({lastTimeCheck: performance.now(),needRedraw: this.state.first, first: false});
         } else{
             const now = performance.now();
             const tickDiff = (now - this.state.lastTimeCheck);
             if (tickDiff < SLOWFAC) {
+                this.setState({needRedraw: false});
                 return;
             }
             const newT = this.state.t + (tickDiff/SLOWFAC);
-            this.setState({t: newT, lastTimeCheck: now});
+            this.setState({t: newT, oldT: this.state.t, lastTimeCheck: now, needRedraw: true});
         }
 
         this.setCalculated();

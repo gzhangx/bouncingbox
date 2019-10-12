@@ -7,8 +7,13 @@ import {types} from "../util/timeCalc";
 function Coords() {
 
     function processor(ctx, contextInfo) {
-        const {t, calculated, currentItemStatus, lastImpactChanged} = contextInfo.state;
+        const {t, needRedraw, calculated, currentItemStatus, lastImpactChanged} = contextInfo.state;
         if (!calculated || !currentItemStatus) return;
+        if (!needRedraw) {
+            return;
+        }
+
+        if (!ctx)return true;
         const {width, height, bottomSpace} = contextInfo.state.ui;
         function translateY(y) {
             return height - y - bottomSpace;

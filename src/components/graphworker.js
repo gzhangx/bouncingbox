@@ -11,7 +11,9 @@ class Graphic extends React.Component {
     }
 
     doPaint() {
-        const { contextInfo, processor } = this.props;        
+
+        const { contextInfo, processor } = this.props; 
+        if (!processor(null, contextInfo)) return;       
         const {width, height} = contextInfo.state.ui;
         const context = this.refs.canvas.getContext("2d");
         context.clearRect(0, 0, width, height);
@@ -45,7 +47,7 @@ class RunWorker extends React.Component {
     tick() {        
         const contextInfo = this.props.contextInfo;
         contextInfo.processState();
-        requestAnimationFrame(this.tick);
+        setTimeout(()=>requestAnimationFrame(this.tick),20);
     }
 
     render() {

@@ -6,8 +6,13 @@ import {MainContext} from "./provider";
 function EnergyEnv() {
 
     function processor(ctx, contextInfo) {
-        const {t, calculated, origItems, showEnergy, currentItemStatus} = contextInfo.state;
+        const {t, needRedraw, calculated, origItems, showEnergy, currentItemStatus} = contextInfo.state;
         if (!calculated || !currentItemStatus) return;
+        if (!needRedraw) {
+            return;
+        }
+
+        if (!ctx)return true;
         const {width, height, bottomSpace} = contextInfo.state.ui;
         let scale = (width/2)-50;
         if (scale < 0) scale = 10;

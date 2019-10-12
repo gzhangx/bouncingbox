@@ -52,7 +52,7 @@ class MainPage extends React.Component {
     };
 
     showEnergy = ()=>{
-        this.setState({showEnergy: !this.state.showEnergy});
+        this.setState({showEnergy: !this.state.showEnergy, first: true});
     };
 
     checkImpactChange = ()=>{
